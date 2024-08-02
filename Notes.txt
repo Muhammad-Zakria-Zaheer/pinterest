@@ -1,0 +1,46 @@
+Pacages Installed : 
+1. npm i mongoose 
+
+
+
+Data Association 
+Start: 
+1.Create 2 Models : pahla model User ka aur dosra model Posts kay nam say 
+2.Ab aik route banao jismay aik user ban jay default 
+
+
+const userModel = require("./users");
+const postModel = require("./posts");
+
+router.get('/alluserposts' , async function (req,res,next){
+  let user = await userModel
+  .findOne({_id:"668655f406c36a59c33fcf20"})
+  .populate('posts')
+  res.send(user);
+});
+
+router.get('/createuser' , async function (req,res,next){
+  let createduser = await userModel.create({
+    username: "Zakryder",
+    password: "2001zak",
+    posts: [],
+    email: "zakria123@gmail.com",
+    fullName:"Muhammad Zakria Zaheer"
+  })
+  res.send(createduser);
+});
+
+
+router.get('/createpost' , async function (req,res,next){
+  let createdpost = await postModel.create({
+    postText: " kaesy ho saray",
+    user : "668655f406c36a59c33fcf20"
+   
+  })
+  let user = await userModel.findOne({_id: "668655f406c36a59c33fcf20"});
+  user.posts.push(createdpost._id);
+  await user.save();
+
+  res.send("done");
+});
+
